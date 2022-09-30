@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QDialog, QDialogButtonBox, QFormLayout,
-                               QGroupBox, QLabel, QSpinBox, QVBoxLayout)
+                               QGroupBox, QLabel, QSpinBox, QVBoxLayout, QWidget, QPushButton)
 
 
 class NewMazeDialog(QDialog):
