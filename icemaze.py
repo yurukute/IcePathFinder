@@ -6,7 +6,7 @@ class IceMaze:
     def __init__(self, row=0, col=0, rock_num=0, snow_num=0):
         self.__row = row
         self.__col = col
-        self.__map = [[' ']*row for i in range(col)]
+        self.__map = [[' ']*col for i in range(row)]
         pos = [i for i in range(row*col)]
         rocks = sample(pos, rock_num)
         snows = sample([i for i in pos if i not in rocks], snow_num)
@@ -22,13 +22,15 @@ class IceMaze:
         self.__start = start
 
     def read_maze(strmap):
-        col = strmap.find('\n')
-        row = (len(strmap)+1)//(col+1)
+        if strmap[len(strmap)-1] == '\n':
+            strmap = strmap[:-1]
+        col = max(len(i) for i in strmap.split('\n'))
+        row = len(strmap.split('\n'))
         maze = IceMaze(row, col)
         i, j = 0, 0
         for c in strmap:
             if c == 'S':
-                maze.__start = i*col + j
+                maze.__start = i*row + j
             if c != '\n':
                 maze.__map[i][j] = c
                 j += 1
@@ -60,12 +62,9 @@ class IceMaze:
     def update_result(self, result, parent, curr):
         new_path = []
         while parent[curr] != -1:
-            if (parent[curr] - curr) % (self.__col) == 0:
-                new_path.append('u' if parent[curr] > curr else 'd')
-            else:
-                new_path.append('l' if parent[curr] > curr else 'r')
+            new_path.insert(0, curr)
             curr = parent[curr]
-        new_path.reverse()
+        new_path.insert(0, curr)
         if len(result) == 0 or len(new_path) < len(result):
             return new_path
         return result
