@@ -1,12 +1,14 @@
 import time
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QPixmap, QAction
+import traceback
+from itertools import pairwise
+from PySide6.QtCore import QSize, Qt, QCoreApplication, QTranslator
+from PySide6.QtGui import QAction, QPen, QPixmap
 from PySide6.QtWidgets import (QApplication, QFileDialog, QGraphicsScene,
                                QGraphicsView, QHBoxLayout, QInputDialog,
-                               QMainWindow, QMessageBox, QPushButton,
+                               QLabel, QMainWindow, QMessageBox, QPushButton,
                                QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
-from mywidgets import NewMazeDialog
+from mywidgets import NewMazeDialog, PickColorDialog
 from icemaze import IceMaze
 
 
@@ -14,52 +16,77 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Ice Path Finder')
-        self.setFixedSize(QSize(600, 600))
+        self.setFixedSize(QSize(800, 600))
         self.init_menubar()
         self.init_view()
+        self.exec_time = QLabel(self.tr('Welcome to Ice Path Finder'))
+        self.statusBar().addPermanentWidget(self.exec_time)
+        self.translator = QTranslator(self)
 
     def init_menubar(self):
         menu = self.menuBar()
 
         # File menu
-        new_action = QAction('&New', self)
+        new_action = QAction(self.tr('&New'), self)
+        load_action = QAction(self.tr('&Open...'), self)
+        quit_action = QAction(self.tr('&Quit'), self)
+
         new_action.setShortcut('Ctrl+N')
-        new_action.triggered.connect(self.init_maze)
-        load_action = QAction('&Load...', self)
         load_action.setShortcut('Ctrl+O')
-        load_action.triggered.connect(self.load_maze)
-        quit_action = QAction('&Quit', self)
         quit_action.setShortcut('Ctrl+Q')
+
+        new_action.triggered.connect(self.init_maze)
+        load_action.triggered.connect(self.load_maze)
         quit_action.triggered.connect(self.close)
 
-        file_menu = menu.addMenu('&File')
+        file_menu = menu.addMenu(self.tr('&File'))
         file_menu.addAction(new_action)
         file_menu.addAction(load_action)
         file_menu.addSeparator()
         file_menu.addAction(quit_action)
 
+        # Option menu
+        change_color_action = QAction(self.tr('&Change path\'s color'), self)
+        english_action = QAction(self.tr('&English'), self)
+        vietnamese_action = QAction(self.tr('&Vietnamese'), self)
+
+        change_color_action.triggered.connect(self.change_color)
+        english_action.triggered.connect(self.change_language)
+        english_action.setData('eng_US')
+        vietnamese_action.triggered.connect(self.change_language)
+        vietnamese_action.setData('vi_VN')
+
+        option_menu = menu.addMenu(self.tr('&Option'))
+        option_menu.addAction(change_color_action)
+
+        change_language_menu = option_menu.addMenu(self.tr('Change &language'))
+        change_language_menu.addAction(english_action)
+        change_language_menu.addAction(vietnamese_action)
+
         # Help menu
-        help_action = QAction('&Help...', self)
+        help_action = QAction(self.tr('&Help...'), self)
+        about_action = QAction(self.tr('&About Ice Path Finder'), self)
+
         help_action.setShortcut('F1')
+
         help_action.triggered.connect(self.show_help)
-        about_action = QAction('&About Ice Path Finder', self)
         about_action.triggered.connect(self.show_about)
 
-        help_menu = menu.addMenu('&Help')
+        help_menu = menu.addMenu(self.tr('&Help'))
         help_menu.addAction(help_action)
         help_menu.addSeparator()
         help_menu.addAction(about_action)
 
     def init_view(self):
         self.view = QGraphicsView()
-        self.scene = QGraphicsScene()
-        self.view.setScene(self.scene)
         self.tileset = QPixmap('./imgs/tiles.png')
         self.maze = None
+        self.solution = []
+        self.bfs_color, self.dfs_color = Qt.yellow, Qt.red
 
-        self.load_button = QPushButton('Import maze from file')
+        self.load_button = QPushButton(self.tr('Import maze from file'))
         self.load_button.clicked.connect(self.load_maze)
-        self.solve_button = QPushButton('Solve')
+        self.solve_button = QPushButton(self.tr('Solve'))
         self.solve_button.clicked.connect(self.solve_maze)
         self.solve_button.setEnabled(False)
 
@@ -90,8 +117,20 @@ class MainWindow(QMainWindow):
         dialog.setNameFilter('Text files (*.txt)')
         if dialog.exec():
             f = open(dialog.selectedFiles()[0])
-            self.maze = IceMaze.read_maze(f.read())
-            self.draw_maze()
+            try:
+                self.maze = IceMaze.read_maze(f.read())
+                self.draw_maze()
+            except ZeroDivisionError:
+                QMessageBox.critical(
+                    self,
+                    self.tr('Error'),
+                    self.tr('CANNOT READ MAZE\n'
+                            'File is empty or contain only one line.'))
+
+    def change_color(self):
+        dialog = PickColorDialog(self.bfs_color, self.dfs_color)
+        if dialog.exec():
+            self.bfs_color, self.dfs_color = dialog.values()
 
     def get_tile_num(self, tile):
         if tile == ' ':
@@ -106,9 +145,10 @@ class MainWindow(QMainWindow):
             return 4
 
     def draw_maze(self):
-        self.scene.clear()
+        self.scene = QGraphicsScene()
+        self.view.setScene(self.scene)
         maze = self.maze.get_map()
-        col, row = len(maze), len(maze[0])
+        row, col = len(maze), len(maze[0])
         for i in range(row):
             for j in range(col):
                 tile_num = self.get_tile_num(maze[i][j])
@@ -116,9 +156,22 @@ class MainWindow(QMainWindow):
                 pixmap = self.scene.addPixmap(tile)
                 pixmap.setPos(j*32, i*32)
         self.solve_button.setEnabled(True)
+        print(self.scene.width(), self.scene.height())
 
-    def draw_solution(self):
-        return
+    def draw_solution(self, result, color):
+        print(result)
+        for line in self.solution:
+            self.scene.removeItem(line)
+        col = len(self.maze.get_map()[0])
+        pen = QPen(color, 8, Qt.SolidLine, Qt.RoundCap)
+        for curr, next in pairwise(result):
+            from_row, from_col = curr // col, curr % col
+            to_row, to_col = next // col, next % col
+            line = self.scene.addLine(from_col * 32 + 16, from_row * 32 + 16,
+                                      to_col * 32 + 16, to_row * 32 + 16,
+                                      pen)
+            self.solution.append(line)
+        self.scene.update()
 
     def solve_maze(self):
         alg = ('BFS', 'DFS')
@@ -127,22 +180,29 @@ class MainWindow(QMainWindow):
         if ok:
             start_time = time.time()
             if option == 'BFS':
-                print(self.maze.bfs())
+                self.draw_solution(self.maze.bfs(), self.bfs_color)
             elif option == 'DFS':
-                print(self.maze.dfs())
+                self.draw_solution(self.maze.dfs(), self.dfs_color)
+            self.exec_time.setText(self.tr('Solved in %s secconds'
+                                   % (time.time() - start_time)))
 
     def show_about(self):
-        QMessageBox.about(
+        QMessageBox.information(
             self,
-            'About - Ice Path Finder',
-            'College Project - Basic Topics: '
-            'Apply blind search algorithms in solving ice maze\n'
-            'Develop by Nguyen Khanh Dung\n'
-            'Version: 1.0'
-        )
+            self.tr('About - Ice Path Finder'),
+            self.tr('College Project - Basic Topics:\n'
+                    'Apply blind search algorithms in solving ice maze\n'
+                    'Develop by Nguyen Khanh Dung\n'
+                    'Version: 1.0'))
 
     def show_help(self):
         print('help clicked')
+
+    def change_language(self):
+        lang = self.sender().data()
+        translator = QTranslator()
+        translator.load(lang)
+        QCoreApplication.instance().installTranslator(translator)
 
 
 if __name__ == '__main__':
