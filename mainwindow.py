@@ -1,5 +1,4 @@
 import time
-import traceback
 from itertools import pairwise
 from PySide6.QtCore import QSize, Qt, QCoreApplication, QTranslator
 from PySide6.QtGui import QAction, QPen, QPixmap
@@ -160,6 +159,12 @@ class MainWindow(QMainWindow):
 
     def draw_solution(self, result, color):
         print(result)
+        if len(result) == 0:
+            QMessageBox.information(
+                self,
+                self.tr('Notification'),
+                self.tr('There is no solution for this maze.'))
+            return
         for line in self.solution:
             self.scene.removeItem(line)
         col = len(self.maze.get_map()[0])
