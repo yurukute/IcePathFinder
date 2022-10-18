@@ -1,6 +1,6 @@
 import time
 from itertools import pairwise
-from PySide6.QtCore import QSize, Qt, QCoreApplication, QTranslator
+from PySide6.QtCore import QSize, Qt, QTranslator, QEvent
 from PySide6.QtGui import QAction, QPen, QPixmap
 from PySide6.QtWidgets import (QApplication, QFileDialog, QGraphicsScene,
                                QGraphicsView, QHBoxLayout, QInputDialog,
@@ -19,9 +19,10 @@ class MainWindow(QMainWindow):
         self.setFixedSize(QSize(800, 600))
         self.init_menubar()
         self.init_view()
+        self.translator = QTranslator(self)
         self.exec_time = QLabel(self.tr('Welcome to Ice Path Finder'))
         self.statusBar().addPermanentWidget(self.exec_time)
-        self.translator = QTranslator(self)
+        self.retranslate_ui()
 
     def init_menubar(self):
         menu = self.menuBar()
@@ -52,7 +53,6 @@ class MainWindow(QMainWindow):
 
         change_color_action.triggered.connect(self.change_color)
         english_action.triggered.connect(self.change_language)
-        english_action.setData('eng_US')
         vietnamese_action.triggered.connect(self.change_language)
         vietnamese_action.setData('vi_VN')
 
@@ -202,9 +202,30 @@ class MainWindow(QMainWindow):
 
     def change_language(self):
         lang = self.sender().data()
-        translator = QTranslator()
-        translator.load(lang)
-        QCoreApplication.instance().installTranslator(translator)
+        if lang:
+            self.translator.load(f'translate/{lang}')
+            QApplication.instance().installTranslator(self.translator)
+        else:
+            QApplication.instance().removeTranslator(self.translator)
+
+    def changeEvent(self, event):
+        if event.type() == QEvent.LanguageChange:
+            self.retranslate_ui()
+        super(MainWindow, self).changeEvent(event)
+
+    def retranslate_ui(self):
+        trans = QApplication.translate
+        context = 'MainWindow'
+        sources = [self.exec_time, self.load_button, self.solve_button]
+        for menu in self.menuBar().actions():
+            for submenu in menu.menu().actions():
+                if submenu.menu():
+                    for action in submenu.menu().actions():
+                        sources.append(action)
+                sources.append(submenu)
+            sources.append(menu)
+        for source in sources:
+            source.setText(trans(context, source.text()))
 
 
 if __name__ == '__main__':
