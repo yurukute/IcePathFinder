@@ -12,6 +12,7 @@ from icemaze import IceMaze
 
 
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Ice Path Finder')
@@ -90,11 +91,11 @@ class MainWindow(QMainWindow):
         self.solve_button.setEnabled(False)
 
         footer = QHBoxLayout()
-        footer.addItem(QSpacerItem(1, 1, QSizePolicy.Expanding,
-                                   QSizePolicy.Minimum))
+        footer.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Expanding, QSizePolicy.Minimum))
         footer.addWidget(self.load_button)
-        footer.addItem(QSpacerItem(10, 1, QSizePolicy.Minimum,
-                                   QSizePolicy.Minimum))
+        footer.addItem(
+            QSpacerItem(10, 1, QSizePolicy.Minimum, QSizePolicy.Minimum))
         footer.addWidget(self.solve_button)
 
         main = QVBoxLayout()
@@ -121,8 +122,7 @@ class MainWindow(QMainWindow):
                 self.draw_maze()
             except ZeroDivisionError:
                 QMessageBox.critical(
-                    self,
-                    self.tr('Error'),
+                    self, self.tr('Error'),
                     self.tr('CANNOT READ MAZE\n'
                             'File is empty or contain only one line.'))
 
@@ -151,9 +151,9 @@ class MainWindow(QMainWindow):
         for i in range(row):
             for j in range(col):
                 tile_num = self.get_tile_num(maze[i][j])
-                tile = self.tileset.copy(tile_num*32, 0, 32, 32)
+                tile = self.tileset.copy(tile_num * 32, 0, 32, 32)
                 pixmap = self.scene.addPixmap(tile)
-                pixmap.setPos(j*32, i*32)
+                pixmap.setPos(j * 32, i * 32)
         self.solve_button.setEnabled(True)
         print(self.scene.width(), self.scene.height())
 
@@ -161,8 +161,7 @@ class MainWindow(QMainWindow):
         print(result)
         if len(result) == 0:
             QMessageBox.information(
-                self,
-                self.tr('Notification'),
+                self, self.tr('Notification'),
                 self.tr('There is no solution for this maze.'))
             return
         for line in self.solution:
@@ -173,28 +172,26 @@ class MainWindow(QMainWindow):
             from_row, from_col = curr // col, curr % col
             to_row, to_col = next // col, next % col
             line = self.scene.addLine(from_col * 32 + 16, from_row * 32 + 16,
-                                      to_col * 32 + 16, to_row * 32 + 16,
-                                      pen)
+                                      to_col * 32 + 16, to_row * 32 + 16, pen)
             self.solution.append(line)
         self.scene.update()
 
     def solve_maze(self):
         alg = ('BFS', 'DFS')
-        option, ok = QInputDialog.getItem(
-            self, 'Solve maze', 'Choose algorithm:', alg)
+        option, ok = QInputDialog.getItem(self, 'Solve maze',
+                                          'Choose algorithm:', alg)
         if ok:
             start_time = time.time()
             if option == 'BFS':
                 self.draw_solution(self.maze.bfs(), self.bfs_color)
             elif option == 'DFS':
                 self.draw_solution(self.maze.dfs(), self.dfs_color)
-            self.exec_time.setText(self.tr('Solved in %s secconds'
-                                   % (time.time() - start_time)))
+            self.exec_time.setText(
+                self.tr('Solved in %s secconds' % (time.time() - start_time)))
 
     def show_about(self):
         QMessageBox.information(
-            self,
-            self.tr('About - Ice Path Finder'),
+            self, self.tr('About - Ice Path Finder'),
             self.tr('College Project - Basic Topics:\n'
                     'Apply blind search algorithms in solving ice maze\n'
                     'Develop by Nguyen Khanh Dung\n'
