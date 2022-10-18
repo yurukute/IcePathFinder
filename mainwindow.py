@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.translator = QTranslator(self)
         self.exec_time = QLabel(self.tr('Welcome to Ice Path Finder'))
         self.statusBar().addPermanentWidget(self.exec_time)
-        self.retranslate_ui()
+        self.retranslateUi()
 
     def init_menubar(self):
         menu = self.menuBar()
@@ -210,10 +210,10 @@ class MainWindow(QMainWindow):
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
-            self.retranslate_ui()
+            self.retranslateUi()
         super(MainWindow, self).changeEvent(event)
 
-    def retranslate_ui(self):
+    def retranslateUi(self):
         trans = QApplication.translate
         context = 'MainWindow'
         sources = [self.exec_time, self.load_button, self.solve_button]
