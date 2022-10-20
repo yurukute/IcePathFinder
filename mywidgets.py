@@ -27,10 +27,10 @@ class MyDialog(QDialog):
 class NewMazeDialog(MyDialog):
     def __init__(self):
         super(NewMazeDialog, self).__init__()
-        self.setWindowTitle("Create New Maze")
+        self.setWindowTitle(self.tr("Create New Maze"))
 
     def create_form(self):
-        self.form = QGroupBox("Insert amount of")
+        self.form = QGroupBox(self.tr("Insert amount of"))
         self.row_amt = QSpinBox()
         self.col_amt = QSpinBox()
         self.rock_amt = QSpinBox()
@@ -45,10 +45,10 @@ class NewMazeDialog(MyDialog):
         self.snow_amt.valueChanged.connect(self.value_change)
 
         layout = QFormLayout()
-        layout.addRow(QLabel("Rows:"), self.row_amt)
-        layout.addRow(QLabel("Columns:"), self.col_amt)
-        layout.addRow(QLabel("Rocks:"), self.rock_amt)
-        layout.addRow(QLabel("Snows:"), self.snow_amt)
+        layout.addRow(QLabel(self.tr("Rows:")), self.row_amt)
+        layout.addRow(QLabel(self.tr("Columns:")), self.col_amt)
+        layout.addRow(QLabel(self.tr("Rocks:")), self.rock_amt)
+        layout.addRow(QLabel(self.tr("Snows:")), self.snow_amt)
         self.form.setLayout(layout)
 
     def value_change(self):
@@ -72,10 +72,10 @@ class PickColorDialog(NewMazeDialog):
         self.dfs_color = dfs_color
 
         super(PickColorDialog, self).__init__()
-        self.setWindowTitle("Change path's color")
+        self.setWindowTitle(self.tr("Change path's color"))
 
     def create_form(self):
-        self.form = QGroupBox("Pick color for paths:")
+        self.form = QGroupBox(self.tr("Pick color for paths:"))
         layout = QFormLayout()
         self.bfs_button = QPushButton()
         self.dfs_button = QPushButton()
