@@ -81,7 +81,6 @@ class MainWindow(QMainWindow):
         self.view = QGraphicsView()
         self.tileset = QPixmap('./imgs/tiles.png')
         self.maze = None
-        self.solution = []
         self.bfs_color, self.dfs_color = Qt.yellow, Qt.red
 
         self.load_button = QPushButton(self.tr('Import maze from file'))
@@ -120,7 +119,7 @@ class MainWindow(QMainWindow):
             try:
                 self.maze = IceMaze.read_maze(f.read())
                 self.draw_maze()
-            except ZeroDivisionError:
+            except IndexError:
                 QMessageBox.critical(
                     self, self.tr('Error'),
                     self.tr('CANNOT READ MAZE\n'
@@ -155,6 +154,7 @@ class MainWindow(QMainWindow):
                 pixmap = self.scene.addPixmap(tile)
                 pixmap.setPos(j * 32, i * 32)
         self.solve_button.setEnabled(True)
+        self.path = []
         print(self.scene.width(), self.scene.height())
 
     def draw_solution(self, result, color):
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
                 self, self.tr('Notification'),
                 self.tr('There is no solution for this maze.'))
             return
-        for line in self.solution:
+        for line in self.path:
             self.scene.removeItem(line)
         col = len(self.maze.get_map()[0])
         pen = QPen(color, 8, Qt.SolidLine, Qt.RoundCap)
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
             to_row, to_col = next // col, next % col
             line = self.scene.addLine(from_col * 32 + 16, from_row * 32 + 16,
                                       to_col * 32 + 16, to_row * 32 + 16, pen)
-            self.solution.append(line)
+            self.path.append(line)
         self.scene.update()
 
     def solve_maze(self):
