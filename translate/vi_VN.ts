@@ -9,37 +9,37 @@
         <translation>Chào mừng đến với Ice Path Finder</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="30"/>
+        <location filename="../mainwindow.py" line="31"/>
         <source>&amp;New</source>
         <translation>&amp;Tạo mới</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="31"/>
+        <location filename="../mainwindow.py" line="32"/>
         <source>&amp;Open...</source>
         <translation>&amp;Mở...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="32"/>
+        <location filename="../mainwindow.py" line="33"/>
         <source>&amp;Quit</source>
         <translation>&amp;Thoát</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="42"/>
+        <location filename="../mainwindow.py" line="43"/>
         <source>&amp;File</source>
         <translation>&amp;Tệp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="49"/>
+        <location filename="../mainwindow.py" line="50"/>
         <source>&amp;Change path&apos;s color</source>
         <translation>Thay đổi &amp;màu đường đi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="50"/>
+        <location filename="../mainwindow.py" line="51"/>
         <source>&amp;English</source>
         <translation>Tiếng &amp;Anh</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="51"/>
+        <location filename="../mainwindow.py" line="52"/>
         <source>&amp;Vietnamese</source>
         <translation>Tiếng &amp;Việt</translation>
     </message>
@@ -64,12 +64,12 @@
         <translation>&amp;Về Ice Path Finder</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="87"/>
+        <location filename="../mainwindow.py" line="86"/>
         <source>Import maze from file</source>
         <translation>Thêm mê cung từ tập tin</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="89"/>
+        <location filename="../mainwindow.py" line="88"/>
         <source>Solve</source>
         <translation>Giải</translation>
     </message>
@@ -89,7 +89,7 @@
         <translation>&amp;Trợ giúp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="124"/>
+        <location filename="../mainwindow.py" line="123"/>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
@@ -116,7 +116,7 @@
           Develop by Nguyen Khanh Dung
           Version: 1.0
         </source>
-        <translation>
+        <translation type="obsolete">
           Niên luận cơ sở ngành:
           Áp dụng các giải thuật tìm kiếm để tìm đường đi trong mê cung băng
           Thực hiện bởi: Nguyễn Khánh Dung
@@ -129,7 +129,7 @@
           CANNOT READ MAZE
           File is empty or contain only one line.
         </source>
-        <translation>
+        <translation type="obsolete">
           KHÔNG THỂ ĐỌC MÊ CUNG
           Tập tin trống hoặc chỉ bao gồm một hàng duy nhất.
         </translation>
@@ -143,6 +143,66 @@
         <location filename="../mainwindow.py" line="163"/>
         <source>There is no solution for this maze.</source>
         <translation>Không tồn tại lời giải cho mê cung này.</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.py" line="123"/>
+        <source>CANNOT READ MAZE
+          File is empty or contain only one line.
+        </source>
+        <translation>KHÔNG THỂ ĐỌC MÊ CUNG
+          File rỗng hoặc chỉ chứa một dòng duy nhất
+        </translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.py" line="193"/>
+        <source>College Project - Basic Topics:\nApply blind search algorithms in solving ice maze\nDevelop by Nguyen Khanh Dung\nVersion: 1.0</source>
+        <translation>Niên luận cơ sở ngành:\nÁp dụng gải thuật tìm kiếm để tìm đường trong mê cung\nPhát triển bởi Nguyễn Khánh Dung\nPhiên bản: 1.0</translation>
+    </message>
+</context>
+<context>
+    <name>NewMazeDialog</name>
+    <message>
+        <location filename="../mywidgets.py" line="30"/>
+        <source>Create New Maze</source>
+        <translation>Tạo Mê Cung Mới</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="33"/>
+        <source>Insert amount of</source>
+        <translation>Nhập vào:</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="48"/>
+        <source>Rows:</source>
+        <translation>Số hàng:</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="49"/>
+        <source>Columns:</source>
+        <translation>Số cột:</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="50"/>
+        <source>Rocks:</source>
+        <translation>Số lượng đá:</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="51"/>
+        <source>Snows:</source>
+        <translation>Số lượng tuyết:</translation>
+    </message>
+</context>
+<context>
+    <name>PickColorDialog</name>
+    <message>
+        <location filename="../mywidgets.py" line="75"/>
+        <source>Change path&apos;s color</source>
+        <translation>Thay đổi màu đường đi</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="78"/>
+        <source>Pick color for paths:</source>
+        <translation>Chọn màu cho đường đi</translation>
     </message>
 </context>
 </TS>
