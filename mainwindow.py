@@ -22,7 +22,6 @@ class MainWindow(QMainWindow):
         self.translator = QTranslator(self)
         self.exec_time = QLabel(self.tr('Welcome to Ice Path Finder'))
         self.statusBar().addPermanentWidget(self.exec_time)
-        self.retranslateUi()
 
     def init_menubar(self):
         menu = self.menuBar()
@@ -119,11 +118,11 @@ class MainWindow(QMainWindow):
             try:
                 self.maze = IceMaze.read_maze(f.read())
                 self.draw_maze()
-            except IndexError:
+            except ValueError:
                 QMessageBox.critical(
                     self, self.tr('Error'),
                     self.tr('CANNOT READ MAZE\n'
-                            'File is empty or contain only one line.'))
+                            'File is empty.'))
 
     def change_color(self):
         dialog = PickColorDialog(self.bfs_color, self.dfs_color)
