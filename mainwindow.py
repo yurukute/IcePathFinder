@@ -20,8 +20,8 @@ class MainWindow(QMainWindow):
         self.init_menubar()
         self.init_view()
         self.translator = QTranslator(self)
-        self.exec_time = QLabel(self.tr('Welcome to Ice Path Finder'))
-        self.statusBar().addPermanentWidget(self.exec_time)
+        self.msg = QLabel(self.tr('Welcome to Ice Path Finder'))
+        self.statusBar().addPermanentWidget(self.msg)
 
     def init_menubar(self):
         menu = self.menuBar()
@@ -177,16 +177,17 @@ class MainWindow(QMainWindow):
 
     def solve_maze(self):
         alg = ('BFS', 'DFS')
-        option, ok = QInputDialog.getItem(self, 'Solve maze',
-                                          'Choose algorithm:', alg)
+        option, ok = QInputDialog.getItem(self, self.tr('Solve maze'),
+                                          self.tr('Choose algorithm:'), alg)
         if ok:
             start_time = time.time()
             if option == 'BFS':
                 self.draw_solution(self.maze.bfs(), self.bfs_color)
             elif option == 'DFS':
                 self.draw_solution(self.maze.dfs(), self.dfs_color)
-            self.exec_time.setText(
-                self.tr('Solved in %s secconds' % (time.time() - start_time)))
+            self.msg.setText(
+                self.tr('Solved in ') + ('%s' % (time.time() - start_time)) +
+                self.tr(' seconds.'))
 
     def show_about(self):
         QMessageBox.information(
@@ -213,18 +214,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).changeEvent(event)
 
     def retranslateUi(self):
-        trans = QApplication.translate
-        context = 'MainWindow'
-        sources = [self.exec_time, self.load_button, self.solve_button]
-        for menu in self.menuBar().actions():
-            for submenu in menu.menu().actions():
-                if submenu.menu():
-                    for action in submenu.menu().actions():
-                        sources.append(action)
-                sources.append(submenu)
-            sources.append(menu)
-        for source in sources:
-            source.setText(trans(context, source.text()))
+        self.menuBar().clear()
+        self.init_menubar()
+        self.init_view()
+        self.msg.setText(self.tr('Welcome to Ice Path Finder'))
 
 
 if __name__ == '__main__':
