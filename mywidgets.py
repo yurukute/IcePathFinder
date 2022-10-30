@@ -1,9 +1,12 @@
 from PySide6.QtWidgets import (QColorDialog, QDialog, QDialogButtonBox,
-                               QFormLayout, QGroupBox, QLabel, QPushButton,
-                               QSpinBox, QVBoxLayout)
+                               QFormLayout, QGraphicsView, QGroupBox,
+                               QHBoxLayout, QLabel, QPushButton, QSpacerItem,
+                               QSpinBox, QSizePolicy, QVBoxLayout, QWidget,
+                               QMenuBar, QMainWindow)
 
 
 class MyDialog(QDialog):
+
     def __init__(self):
         super(MyDialog, self).__init__()
         self.create_form()
@@ -25,6 +28,7 @@ class MyDialog(QDialog):
 
 
 class NewMazeDialog(MyDialog):
+
     def __init__(self):
         super(NewMazeDialog, self).__init__()
         self.setWindowTitle(self.tr("Create New Maze"))
@@ -67,6 +71,7 @@ class NewMazeDialog(MyDialog):
 
 
 class PickColorDialog(NewMazeDialog):
+
     def __init__(self, bfs_color, dfs_color):
         self.bfs_color = bfs_color
         self.dfs_color = dfs_color
@@ -104,3 +109,31 @@ class PickColorDialog(NewMazeDialog):
 
     def values(self):
         return [self.bfs_color, self.dfs_color]
+
+
+class MyAppView(QWidget):
+
+    def __init__(self):
+        super(MyAppView, self).__init__()
+
+        self.view = QGraphicsView()
+        self.load_button = QPushButton(self.tr('Import maze from file'))
+        self.solve_button = QPushButton(self.tr('Solve'))
+
+        buttons = QHBoxLayout()
+        buttons.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        buttons.addWidget(self.load_button)
+        buttons.addItem(
+            QSpacerItem(10, 1, QSizePolicy.Minimum, QSizePolicy.Minimum))
+        buttons.addWidget(self.solve_button)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.view)
+        layout.addItem(buttons)
+
+        self.setLayout(layout)
+
+    def reset_buttons(self):
+        self.load_button.setText(self.tr('Import maze from file'))
+        self.solve_button.setText(self.tr('Solve'))

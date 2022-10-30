@@ -4,7 +4,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.py" line="220"/>
+        <location filename="../mainwindow.py" line="205"/>
         <source>Welcome to Ice Path Finder</source>
         <translation>Chào mừng đến với Ice Path Finder</translation>
     </message>
@@ -69,44 +69,34 @@
         <translation>&amp;Trợ giúp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="85"/>
-        <source>Import maze from file</source>
-        <translation>Thêm mê cung từ tập tin</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.py" line="87"/>
-        <source>Solve</source>
-        <translation>Giải</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.py" line="122"/>
+        <location filename="../mainwindow.py" line="107"/>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="122"/>
+        <location filename="../mainwindow.py" line="107"/>
         <source>CANNOT READ MAZE
 File is empty.</source>
         <translation>KHÔNG THỂ ĐỌC MÊ CUNG
 Tập tin trống.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="162"/>
+        <location filename="../mainwindow.py" line="147"/>
         <source>Notification</source>
         <translation>Thông báo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="162"/>
+        <location filename="../mainwindow.py" line="147"/>
         <source>There is no solution for this maze.</source>
         <translation>Không tồn tại lời giải cho mê cung này.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="180"/>
+        <location filename="../mainwindow.py" line="165"/>
         <source>Solve maze</source>
         <translation>Giải mê cung</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="180"/>
+        <location filename="../mainwindow.py" line="165"/>
         <source>Choose algorithm:</source>
         <translation>Chọn giải thuật</translation>
     </message>
@@ -116,12 +106,12 @@ Tập tin trống.</translation>
         <translation type="obsolete">Đã giải trong %s giây</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="193"/>
+        <location filename="../mainwindow.py" line="178"/>
         <source>About - Ice Path Finder</source>
         <translation>Thông tin - Ice Path Finder</translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="193"/>
+        <location filename="../mainwindow.py" line="178"/>
         <source>College Project - Basic Topics:
 Apply blind search algorithms in solving ice maze
 Develop by Nguyen Khanh Dung
@@ -133,45 +123,58 @@ Phiên bản: 1.0
 </translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="188"/>
+        <location filename="../mainwindow.py" line="173"/>
         <source>Solved in </source>
         <translation>Đã giải trong </translation>
     </message>
     <message>
-        <location filename="../mainwindow.py" line="188"/>
+        <location filename="../mainwindow.py" line="173"/>
         <source> seconds.</source>
         <translation> giây.</translation>
     </message>
 </context>
 <context>
+    <name>MyAppView</name>
+    <message>
+        <location filename="../mywidgets.py" line="138"/>
+        <source>Import maze from file</source>
+        <translation>Thêm mê cung từ tập tin</translation>
+    </message>
+    <message>
+        <location filename="../mywidgets.py" line="139"/>
+        <source>Solve</source>
+        <translation>Giải</translation>
+    </message>
+</context>
+<context>
     <name>NewMazeDialog</name>
     <message>
-        <location filename="../mywidgets.py" line="32"/>
+        <location filename="../mywidgets.py" line="34"/>
         <source>Create New Maze</source>
         <translation>Tạo Mê Cung Mới</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="35"/>
+        <location filename="../mywidgets.py" line="37"/>
         <source>Insert amount of</source>
         <translation>Nhập vào giá trị của:</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="50"/>
+        <location filename="../mywidgets.py" line="52"/>
         <source>Rows:</source>
         <translation>Số hàng:</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="51"/>
+        <location filename="../mywidgets.py" line="53"/>
         <source>Columns:</source>
         <translation>Số cột:</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="52"/>
+        <location filename="../mywidgets.py" line="54"/>
         <source>Rocks:</source>
         <translation>Số lượng đá:</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="53"/>
+        <location filename="../mywidgets.py" line="55"/>
         <source>Snows:</source>
         <translation>Số lượng tuyết:</translation>
     </message>
@@ -179,12 +182,12 @@ Phiên bản: 1.0
 <context>
     <name>PickColorDialog</name>
     <message>
-        <location filename="../mywidgets.py" line="77"/>
+        <location filename="../mywidgets.py" line="80"/>
         <source>Change path&apos;s color</source>
         <translation>Thay đổi màu đường đi</translation>
     </message>
     <message>
-        <location filename="../mywidgets.py" line="80"/>
+        <location filename="../mywidgets.py" line="83"/>
         <source>Pick color for paths:</source>
         <translation>Chọn màu cho đường đi</translation>
     </message>

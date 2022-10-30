@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (QApplication, QFileDialog, QGraphicsScene,
                                QLabel, QMainWindow, QMessageBox, QPushButton,
                                QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
-from mywidgets import NewMazeDialog, PickColorDialog
+from mywidgets import NewMazeDialog, PickColorDialog, MyAppView
 from icemaze import IceMaze
 
 
@@ -77,32 +77,17 @@ class MainWindow(QMainWindow):
         help_menu.addAction(about_action)
 
     def init_view(self):
-        self.view = QGraphicsView()
+        self.appview = MyAppView()
+
+        self.appview.load_button.clicked.connect(self.load_maze)
+        self.appview.solve_button.clicked.connect(self.solve_maze)
+        self.appview.solve_button.setEnabled(False)
+
+        self.setCentralWidget(self.appview)
+
         self.tileset = QPixmap('./imgs/tiles.png')
         self.maze = None
         self.bfs_color, self.dfs_color = Qt.yellow, Qt.red
-
-        self.load_button = QPushButton(self.tr('Import maze from file'))
-        self.load_button.clicked.connect(self.load_maze)
-        self.solve_button = QPushButton(self.tr('Solve'))
-        self.solve_button.clicked.connect(self.solve_maze)
-        self.solve_button.setEnabled(False)
-
-        footer = QHBoxLayout()
-        footer.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Expanding, QSizePolicy.Minimum))
-        footer.addWidget(self.load_button)
-        footer.addItem(
-            QSpacerItem(10, 1, QSizePolicy.Minimum, QSizePolicy.Minimum))
-        footer.addWidget(self.solve_button)
-
-        main = QVBoxLayout()
-        main.addWidget(self.view)
-        main.addItem(footer)
-
-        self.wid = QWidget()
-        self.wid.setLayout(main)
-        self.setCentralWidget(self.wid)
 
     def init_maze(self):
         dialog = NewMazeDialog()
@@ -143,7 +128,7 @@ class MainWindow(QMainWindow):
 
     def draw_maze(self):
         self.scene = QGraphicsScene()
-        self.view.setScene(self.scene)
+        self.appview.view.setScene(self.scene)
         maze = self.maze.get_map()
         row, col = len(maze), len(maze[0])
         for i in range(row):
@@ -152,7 +137,7 @@ class MainWindow(QMainWindow):
                 tile = self.tileset.copy(tile_num * 32, 0, 32, 32)
                 pixmap = self.scene.addPixmap(tile)
                 pixmap.setPos(j * 32, i * 32)
-        self.solve_button.setEnabled(True)
+        self.appview.solve_button.setEnabled(True)
         self.path = []
         print(self.scene.width(), self.scene.height())
 
@@ -216,7 +201,7 @@ class MainWindow(QMainWindow):
     def retranslateUi(self):
         self.menuBar().clear()
         self.init_menubar()
-        self.init_view()
+        self.appview.reset_buttons()
         self.msg.setText(self.tr('Welcome to Ice Path Finder'))
 
 
