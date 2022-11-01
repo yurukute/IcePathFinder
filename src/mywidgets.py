@@ -1,8 +1,11 @@
+from itertools import pairwise
+from PySide6.QtGui import QPen, QPixmap
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QColorDialog, QDialog, QDialogButtonBox,
                                QFormLayout, QGraphicsView, QGroupBox,
                                QHBoxLayout, QLabel, QPushButton, QSpacerItem,
                                QSpinBox, QSizePolicy, QVBoxLayout, QWidget,
-                               QMenuBar, QMainWindow)
+                               QGraphicsScene, QMessageBox)
 
 
 class MyDialog(QDialog):
@@ -117,6 +120,7 @@ class MyAppView(QWidget):
         super(MyAppView, self).__init__()
 
         self.view = QGraphicsView()
+        self.tileset = QPixmap('./imgs/tiles.png')
         self.load_button = QPushButton(self.tr('Import maze from file'))
         self.solve_button = QPushButton(self.tr('Solve'))
 
@@ -137,3 +141,48 @@ class MyAppView(QWidget):
     def reset_buttons(self):
         self.load_button.setText(self.tr('Import maze from file'))
         self.solve_button.setText(self.tr('Solve'))
+
+    def get_tile_num(self, tile):
+        if tile == ' ':
+            return 0
+        if tile == '#':
+            return 1
+        if tile == 'S':
+            return 2
+        if tile == 'E':
+            return 3
+        else:
+            return 4
+
+    def draw_maze(self, maze):
+        self.scene = QGraphicsScene()
+        self.view.setScene(self.scene)
+        row, col = len(maze), len(maze[0])
+        for i in range(row):
+            for j in range(col):
+                tile_num = self.get_tile_num(maze[i][j])
+                tile = self.tileset.copy(tile_num * 32, 0, 32, 32)
+                pixmap = self.scene.addPixmap(tile)
+                pixmap.setPos(j * 32, i * 32)
+        self.solve_button.setEnabled(True)
+        self.path = []
+        print(self.scene.width(), self.scene.height())
+
+    def draw_solution(self, maze, result, color):
+        print(result)
+        if len(result) == 0:
+            QMessageBox.information(
+                self, self.tr('Notification'),
+                self.tr('There is no solution for this maze.'))
+            return
+        for line in self.path:
+            self.scene.removeItem(line)
+        col = len(maze[0])
+        pen = QPen(color, 8, Qt.SolidLine, Qt.RoundCap)
+        for curr, next in pairwise(result):
+            from_row, from_col = curr // col, curr % col
+            to_row, to_col = next // col, next % col
+            line = self.scene.addLine(from_col * 32 + 16, from_row * 32 + 16,
+                                      to_col * 32 + 16, to_row * 32 + 16, pen)
+            self.path.append(line)
+        self.scene.update()
