@@ -1,11 +1,71 @@
 from itertools import pairwise
-from PySide6.QtGui import QPen, QPixmap
+from PySide6.QtGui import QAction, QPen, QPixmap
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QColorDialog, QDialog, QDialogButtonBox,
                                QFormLayout, QGraphicsView, QGroupBox,
                                QHBoxLayout, QLabel, QPushButton, QSpacerItem,
                                QSpinBox, QSizePolicy, QVBoxLayout, QWidget,
-                               QGraphicsScene, QMessageBox)
+                               QGraphicsScene, QMessageBox, QMenuBar)
+
+
+class MyMenuBar(QMenuBar):
+
+    def __init__(self):
+        super(MyMenuBar, self).__init__()
+
+        # File menu
+        self.new_action = QAction(self.tr('&New'), self)
+        self.load_action = QAction(self.tr('&Open...'), self)
+        self.quit_action = QAction(self.tr('&Quit'), self)
+
+        self.new_action.setShortcut('Ctrl+N')
+        self.load_action.setShortcut('Ctrl+O')
+        self.quit_action.setShortcut('Ctrl+Q')
+
+        file_menu = self.addMenu(self.tr('&File'))
+        file_menu.addAction(self.new_action)
+        file_menu.addAction(self.load_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.quit_action)
+
+        # Option menu
+        self.change_color_action = QAction(self.tr('&Change path\'s color'),
+                                           self)
+        self.english_action = QAction(self.tr('&English'), self)
+        self.vietnamese_action = QAction(self.tr('&Vietnamese'), self)
+        self.vietnamese_action.setData('vi_VN')
+
+        option_menu = self.addMenu(self.tr('&Option'))
+        option_menu.addAction(self.change_color_action)
+
+        change_language_menu = option_menu.addMenu(self.tr('Change &language'))
+        change_language_menu.addAction(self.english_action)
+        change_language_menu.addAction(self.vietnamese_action)
+
+        # Help menu
+        help_action = QAction(self.tr('&Help...'), self)
+        about_action = QAction(self.tr('&About Ice Path Finder'), self)
+
+        help_action.setShortcut('F1')
+
+        help_action.triggered.connect(self.show_help)
+        about_action.triggered.connect(self.show_about)
+
+        help_menu = self.addMenu(self.tr('&Help'))
+        help_menu.addAction(help_action)
+        help_menu.addSeparator()
+        help_menu.addAction(about_action)
+
+    def show_help(self):
+        print('help clicked')
+
+    def show_about(self):
+        QMessageBox.information(
+            self, self.tr('About - Ice Path Finder'),
+            self.tr('College Project - Basic Topics:\n'
+                    'Apply blind search algorithms in solving ice maze\n'
+                    'Develop by Nguyen Khanh Dung\n'
+                    'Version: 1.0'))
 
 
 class MyDialog(QDialog):
@@ -120,7 +180,7 @@ class MyAppView(QWidget):
         super(MyAppView, self).__init__()
 
         self.view = QGraphicsView()
-        self.tileset = QPixmap('./imgs/tiles.png')
+        self.tileset = QPixmap('../imgs/tiles.png')
         self.load_button = QPushButton(self.tr('Import maze from file'))
         self.solve_button = QPushButton(self.tr('Solve'))
 
