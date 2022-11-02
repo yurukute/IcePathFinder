@@ -48,18 +48,18 @@ class MyMenuBar(QMenuBar):
 
         help_action.setShortcut('F1')
 
-        help_action.triggered.connect(self.show_help)
-        about_action.triggered.connect(self.show_about)
+        help_action.triggered.connect(self.showHelp)
+        about_action.triggered.connect(self.showAbout)
 
         help_menu = self.addMenu(self.tr('&Help'))
         help_menu.addAction(help_action)
         help_menu.addSeparator()
         help_menu.addAction(about_action)
 
-    def show_help(self):
+    def showHelp(self):
         print('help clicked')
 
-    def show_about(self):
+    def showAbout(self):
         QMessageBox.information(
             self, self.tr('About - Ice Path Finder'),
             self.tr('College Project - Basic Topics:\n'
@@ -72,7 +72,7 @@ class MyDialog(QDialog):
 
     def __init__(self):
         super(MyDialog, self).__init__()
-        self.create_form()
+        self.createForm()
 
         btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         btns.accepted.connect(self.accept)
@@ -83,7 +83,7 @@ class MyDialog(QDialog):
         mainLayout.addWidget(btns)
         self.setLayout(mainLayout)
 
-    def create_form(self):
+    def createForm(self):
         return
 
     def values(self):
@@ -96,7 +96,7 @@ class NewMazeDialog(MyDialog):
         super(NewMazeDialog, self).__init__()
         self.setWindowTitle(self.tr("Create New Maze"))
 
-    def create_form(self):
+    def createForm(self):
         self.form = QGroupBox(self.tr("Insert amount of"))
         self.row_amt = QSpinBox()
         self.col_amt = QSpinBox()
@@ -118,7 +118,7 @@ class NewMazeDialog(MyDialog):
         layout.addRow(QLabel(self.tr("Snows:")), self.snow_amt)
         self.form.setLayout(layout)
 
-    def value_change(self):
+    def valueChange(self):
         max = self.row_amt.value() * self.col_amt.value()
         if max >= 2:
             max -= 2
@@ -133,7 +133,7 @@ class NewMazeDialog(MyDialog):
         return [row, col, rocks, snows]
 
 
-class PickColorDialog(NewMazeDialog):
+class PickColorDialog(MyDialog):
 
     def __init__(self, bfs_color, dfs_color):
         self.bfs_color = bfs_color
@@ -142,7 +142,7 @@ class PickColorDialog(NewMazeDialog):
         super(PickColorDialog, self).__init__()
         self.setWindowTitle(self.tr("Change path's color"))
 
-    def create_form(self):
+    def createForm(self):
         self.form = QGroupBox(self.tr("Pick color for paths:"))
         layout = QFormLayout()
         self.bfs_button = QPushButton()
@@ -151,20 +151,20 @@ class PickColorDialog(NewMazeDialog):
         self.bfs_button.setPalette(self.bfs_color)
         self.dfs_button.setPalette(self.dfs_color)
 
-        self.bfs_button.clicked.connect(self.bfs_button_clicked)
-        self.dfs_button.clicked.connect(self.dfs_button_clicked)
+        self.bfs_button.clicked.connect(self.bfsButtonClicked)
+        self.dfs_button.clicked.connect(self.dfsButtonClicked)
 
         layout.addRow(QLabel("BFS:"), self.bfs_button)
         layout.addRow(QLabel("DFS:"), self.dfs_button)
         self.form.setLayout(layout)
 
-    def bfs_button_clicked(self):
+    def bfsButtonClicked(self):
         color = QColorDialog.getColor()
         if color.isValid():
             self.bfs_color = color
             self.bfs_button.setPalette(color)
 
-    def dfs_button_clicked(self):
+    def dfsButtonClicked(self):
         color = QColorDialog.getColor()
         if color.isValid():
             self.dfs_color = color
@@ -198,11 +198,11 @@ class MyAppView(QWidget):
 
         self.setLayout(layout)
 
-    def reset_buttons(self):
+    def resetButtons(self):
         self.load_button.setText(self.tr('Import maze from file'))
         self.solve_button.setText(self.tr('Solve'))
 
-    def get_tile_num(self, tile):
+    def getTileNum(self, tile):
         if tile == ' ':
             return 0
         if tile == '#':
@@ -214,13 +214,13 @@ class MyAppView(QWidget):
         else:
             return 4
 
-    def draw_maze(self, maze):
+    def drawMaze(self, maze):
         self.scene = QGraphicsScene()
         self.view.setScene(self.scene)
         row, col = len(maze), len(maze[0])
         for i in range(row):
             for j in range(col):
-                tile_num = self.get_tile_num(maze[i][j])
+                tile_num = self.getTileNum(maze[i][j])
                 tile = self.tileset.copy(tile_num * 32, 0, 32, 32)
                 pixmap = self.scene.addPixmap(tile)
                 pixmap.setPos(j * 32, i * 32)
@@ -228,7 +228,7 @@ class MyAppView(QWidget):
         self.path = []
         print(self.scene.width(), self.scene.height())
 
-    def draw_solution(self, maze, result, color):
+    def drawSolution(self, maze, result, color):
         print(result)
         if len(result) == 0:
             QMessageBox.information(
