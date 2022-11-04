@@ -117,8 +117,8 @@ class NewMazeDialog(MyDialog):
         self.__rock_amt = QSpinBox()
         self.__snow_amt = QSpinBox()
 
-        self.__row_amt.setMinimum(3)
-        self.__col_amt.setMinimum(3)
+        self.__row_amt.setMinimum(2)
+        self.__col_amt.setMinimum(2)
 
         self.__row_amt.valueChanged.connect(self.valueChange)
         self.__col_amt.valueChanged.connect(self.valueChange)
@@ -135,9 +135,7 @@ class NewMazeDialog(MyDialog):
         return form
 
     def valueChange(self):
-        max = self.__row_amt.value() * self.__col_amt.value()
-        if max >= 2:
-            max -= 2
+        max = self.__row_amt.value() * self.__col_amt.value() - 2
         self.__rock_amt.setMaximum(max - self.__snow_amt.value())
         self.__snow_amt.setMaximum(max - self.__rock_amt.value())
 
@@ -154,7 +152,6 @@ class PickColorDialog(MyDialog):
     def __init__(self, bfs_color, dfs_color):
         self.__bfs_color = bfs_color
         self.__dfs_color = dfs_color
-
         super(PickColorDialog, self).__init__()
         self.setWindowTitle(self.tr("Change path's color"))
 
