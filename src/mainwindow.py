@@ -17,9 +17,8 @@ class MainWindow(QMainWindow):
 
         self.appview = MyAppView()
 
-        self.appview.solve_button.clicked.connect(self.solveMaze)
-        self.appview.load_button.clicked.connect(self.loadMaze)
-        self.appview.solve_button.setEnabled(False)
+        self.appview.setSolveButton(self.solveMaze)
+        self.appview.setLoadButton(self.loadMaze)
 
         self.setCentralWidget(self.appview)
 
@@ -33,12 +32,10 @@ class MainWindow(QMainWindow):
     def getMenuBar(self):
         menu = MyMenuBar()
 
-        menu.new_action.triggered.connect(self.initMaze)
-        menu.load_action.triggered.connect(self.loadMaze)
-        menu.quit_action.triggered.connect(self.close)
-        menu.change_color_action.triggered.connect(self.changeColor)
-        menu.english_action.triggered.connect(self.changeLanguage)
-        menu.vietnamese_action.triggered.connect(self.changeLanguage)
+        menu.setNewAction(self.initMaze)
+        menu.setLoadAction(self.loadMaze)
+        menu.setChangeCorlorAction(self.changeColor)
+        menu.setChangeLanguageAction(self.changeLanguage)
 
         return menu
 
@@ -50,7 +47,6 @@ class MainWindow(QMainWindow):
 
     def loadMaze(self):
         dialog = QFileDialog()
-        dialog.setOption(QFileDialog.DontUseNativeDialog, True)
         dialog.setNameFilter('Text files (*.txt)')
         if dialog.exec():
             f = open(dialog.selectedFiles()[0])
@@ -99,7 +95,7 @@ class MainWindow(QMainWindow):
 
     def retranslateUi(self):
         self.setMenuBar(self.getMenuBar())
-        self.appview.resetButtons()
+        self.appview.setButtonsText()
         self.msg.setText(self.tr('Welcome to Ice Path Finder'))
 
 
