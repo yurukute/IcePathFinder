@@ -16,19 +16,20 @@ class MyMenuBar(QMenuBar):
         # File menu
         self.__new_action = QAction(self.tr('&New'), self)
         self.__load_action = QAction(self.tr('&Open...'), self)
-        self.__quit_action = QAction(self.tr('&Quit'), self)
 
         self.__new_action.setShortcut('Ctrl+N')
         self.__load_action.setShortcut('Ctrl+O')
-        self.__quit_action.setShortcut('Ctrl+Q')
-
-        self.__quit_action.triggered.connect(QApplication.instance().quit)
 
         file_menu = self.addMenu(self.tr('&File'))
         file_menu.addAction(self.__new_action)
         file_menu.addAction(self.__load_action)
         file_menu.addSeparator()
-        file_menu.addAction(self.__quit_action)
+
+        quit_action = QAction(self.tr('&Quit'), self)
+        quit_action.setShortcut('Ctrl+Q')
+        quit_action.triggered.connect(QApplication.instance().quit)
+
+        file_menu.addAction(quit_action)
 
         # Option menu
         self.__change_color_action = QAction(self.tr('&Change path\'s color'),
