@@ -15,19 +15,19 @@ class MainWindow(QMainWindow):
         self.setFixedSize(QSize(800, 600))
         self.setMenuBar(self.getMenuBar())
 
-        self.appview = MyAppView()
+        self.__appview = MyAppView()
 
-        self.appview.setSolveButton(self.solveMaze)
-        self.appview.setLoadButton(self.loadMaze)
+        self.__appview.setSolveButton(self.solveMaze)
+        self.__appview.setLoadButton(self.loadMaze)
 
-        self.setCentralWidget(self.appview)
+        self.setCentralWidget(self.__appview)
 
-        self.maze = None
-        self.bfs_color, self.dfs_color = Qt.yellow, Qt.red
-        self.translator = QTranslator(self)
+        self.__maze = None
+        self.__bfs_color, self.__dfs_color = Qt.yellow, Qt.red
+        self.__translator = QTranslator(self)
 
-        self.msg = QLabel(self.tr('Welcome to Ice Path Finder'))
-        self.statusBar().addPermanentWidget(self.msg)
+        self.__msg = QLabel(self.tr('Welcome to Ice Path Finder'))
+        self.statusBar().addPermanentWidget(self.__msg)
 
     def getMenuBar(self):
         menu = MyMenuBar()
@@ -42,8 +42,8 @@ class MainWindow(QMainWindow):
     def initMaze(self):
         dialog = NewMazeDialog()
         if dialog.exec():
-            self.maze = IceMaze(*dialog.values())
-            self.appview.drawMaze(self.maze.get_map())
+            self.__maze = IceMaze(*dialog.values())
+            self.__appview.drawMaze(self.__maze.get_map())
 
     def loadMaze(self):
         dialog = QFileDialog()
@@ -51,8 +51,8 @@ class MainWindow(QMainWindow):
         if dialog.exec():
             f = open(dialog.selectedFiles()[0])
             try:
-                self.maze = IceMaze.read_maze(f.read())
-                self.appview.drawMaze(self.maze.get_map())
+                self.__maze = IceMaze.read_maze(f.read())
+                self.__appview.drawMaze(self.__maze.get_map())
             except (ValueError, IndexError):
                 QMessageBox.critical(
                     self, self.tr('Error'),
@@ -60,9 +60,9 @@ class MainWindow(QMainWindow):
                             'File is empty.'))
 
     def changeColor(self):
-        dialog = PickColorDialog(self.bfs_color, self.dfs_color)
+        dialog = PickColorDialog(self.__bfs_color, self.__dfs_color)
         if dialog.exec():
-            self.bfs_color, self.dfs_color = dialog.values()
+            self.__bfs_color, self.__dfs_color = dialog.values()
 
     def solveMaze(self):
         alg = ('BFS', 'DFS')
@@ -71,12 +71,10 @@ class MainWindow(QMainWindow):
         if ok:
             start_time = time.time()
             if option == 'BFS':
-                self.appview.drawSolution(self.maze.get_map(), self.maze.bfs(),
-                                          self.bfs_color)
+                self.__appview.drawSolution(self.__maze.get_map(), self.__maze.bfs(), self.__bfs_color)
             elif option == 'DFS':
-                self.appview.drawSolution(self.maze.get_map(), self.maze.dfs(),
-                                          self.dfs_color)
-            self.msg.setText(
+                self.__appview.drawSolution(self.__maze.get_map(), self.__maze.dfs(), self.__dfs_color)
+            self.__msg.setText(
                 self.tr('Solved in ') + ('%s' % (time.time() - start_time)) +
                 self.tr(' seconds.'))
 
@@ -95,8 +93,8 @@ class MainWindow(QMainWindow):
 
     def retranslateUi(self):
         self.setMenuBar(self.getMenuBar())
-        self.appview.setButtonsText()
-        self.msg.setText(self.tr('Welcome to Ice Path Finder'))
+        self.__appview.setButtonsText()
+        self.__msg.setText(self.tr('Welcome to Ice Path Finder'))
 
 
 if __name__ == '__main__':
