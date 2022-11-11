@@ -71,9 +71,13 @@ class MainWindow(QMainWindow):
         if ok:
             start_time = time.time()
             if option == 'BFS':
-                self.__appview.drawSolution(self.__maze.get_map(), self.__maze.bfs(), self.__bfs_color)
+                self.__appview.drawSolution(self.__maze.get_map(),
+                                            self.__maze.bfs(),
+                                            self.__bfs_color)
             elif option == 'DFS':
-                self.__appview.drawSolution(self.__maze.get_map(), self.__maze.dfs(), self.__dfs_color)
+                self.__appview.drawSolution(self.__maze.get_map(),
+                                            self.__maze.dfs(),
+                                            self.__dfs_color)
             self.__msg.setText(
                 self.tr('Solved in ') + ('%s' % (time.time() - start_time)) +
                 self.tr(' seconds.'))
