@@ -1,5 +1,6 @@
 import time
-from PySide6.QtCore import QSize, Qt, QTranslator, QEvent
+from PySide6.QtCore import QSize, QTranslator, QEvent
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (QApplication, QFileDialog, QInputDialog, QLabel,
                                QMainWindow, QMessageBox)
 
@@ -23,7 +24,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.__appview)
 
         self.__maze = None
-        self.__bfs_color, self.__dfs_color = Qt.yellow, Qt.red
+        self.__bfs_color, self.__dfs_color = QColor("yellow"), QColor("red")
         self.__translator = QTranslator(self)
 
         self.__msg = QLabel(self.tr('Welcome to Ice Path Finder'))
@@ -85,10 +86,10 @@ class MainWindow(QMainWindow):
     def changeLanguage(self):
         lang = self.sender().data()
         if lang:
-            self.translator.load(f'../translate/{lang}')
-            QApplication.instance().installTranslator(self.translator)
+            self.__translator.load(f'../translate/{lang}')
+            QApplication.instance().installTranslator(self.__translator)
         else:
-            QApplication.instance().removeTranslator(self.translator)
+            QApplication.instance().removeTranslator(self.__translator)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
