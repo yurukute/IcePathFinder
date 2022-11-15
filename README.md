@@ -2,7 +2,7 @@
 College project - Using Blind Search Algorithms To Find Ice Path
 
 ## Overview
-Ice Path Finder is a python project apply blind search algorithms to solve Ice Maze. The original problem is from [ASCII Games: Warning: Ice! kata on Codewars](https://www.codewars.com/kata/58f4cc4e43251b1be6000082) but skip the requirement on checking multiple solutions with the same amount of steps.
+Ice Path Finder is a python project apply blind search algorithms to solve Ice Maze. The original problem is from [\[ASCII Games: Warning: Ice!\] kata on Codewars](https://www.codewars.com/kata/58f4cc4e43251b1be6000082) but skip the requirement on checking multiple solutions with the same amount of steps.
 
 ### Purpose
 Practice on Object-oriented programming.
