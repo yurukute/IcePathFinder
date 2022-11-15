@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
 
         menu.setNewAction(self.initMaze)
         menu.setLoadAction(self.loadMaze)
+        menu.setSaveAction(self.saveMaze)
         menu.setChangeCorlorAction(self.changeColor)
         menu.setChangeLanguageAction(self.changeLanguage)
 
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow):
         if dialog.exec():
             self.__maze = IceMaze(*dialog.values())
             self.__appview.drawMaze(self.__maze.get_map())
+            self.enableSave()
 
     def loadMaze(self):
         dialog = QFileDialog()
@@ -54,11 +56,29 @@ class MainWindow(QMainWindow):
             try:
                 self.__maze = IceMaze.read_maze(f.read())
                 self.__appview.drawMaze(self.__maze.get_map())
+                self.enableSave()
             except (ValueError, IndexError):
                 QMessageBox.critical(
                     self, self.tr('Error'),
                     self.tr('CANNOT READ MAZE\n'
                             'File is empty.'))
+
+    def enableSave(self):
+        file_menu = self.menuBar().actions()[0]
+        save_action = file_menu.menu().actions()[2]
+        save_action.setEnabled(True)
+
+    def saveMaze(self):
+        filename, _ = QFileDialog.getSaveFileName(self, 'Save maze', '',
+                                                  'Text files (*.txt)')
+        if filename:
+            map = self.__maze.get_map()
+            f = open(filename, 'w')
+            for i in range(len(map)):
+                for j in range(len(map[0])):
+                    f.write(map[i][j])
+                f.write('\n')
+            f.close()
 
     def changeColor(self):
         dialog = PickColorDialog(self.__bfs_color, self.__dfs_color)

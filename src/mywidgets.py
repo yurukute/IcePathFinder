@@ -1,3 +1,4 @@
+from os import path
 from itertools import pairwise
 from PySide6.QtGui import QAction, QPen, QPixmap
 from PySide6.QtCore import Qt
@@ -14,67 +15,75 @@ class MyMenuBar(QMenuBar):
         super(MyMenuBar, self).__init__()
 
         # File menu
-        self.__new_action = QAction(self.tr('&New'), self)
-        self.__load_action = QAction(self.tr('&Open...'), self)
+        self.__new_action = QAction(self.tr("&New"), self)
+        self.__load_action = QAction(self.tr("&Open..."), self)
+        self.__save_action = QAction(self.tr("&Save maze"), self)
 
-        self.__new_action.setShortcut('Ctrl+N')
-        self.__load_action.setShortcut('Ctrl+O')
+        self.__new_action.setShortcut("Ctrl+N")
+        self.__load_action.setShortcut("Ctrl+O")
+        self.__save_action.setShortcut("Ctrl+S")
 
-        file_menu = self.addMenu(self.tr('&File'))
+        self.__save_action.setEnabled(False)
+
+        file_menu = self.addMenu(self.tr("&File"))
         file_menu.addAction(self.__new_action)
         file_menu.addAction(self.__load_action)
+        file_menu.addAction(self.__save_action)
         file_menu.addSeparator()
 
-        quit_action = QAction(self.tr('&Quit'), self)
-        quit_action.setShortcut('Ctrl+Q')
+        quit_action = QAction(self.tr("&Quit"), self)
+        quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(QApplication.instance().quit)
 
         file_menu.addAction(quit_action)
 
         # Option menu
-        self.__change_color_action = QAction(self.tr('&Change path\'s color'),
+        self.__change_color_action = QAction(self.tr("&Change path's color"),
                                              self)
-        self.__english_action = QAction(self.tr('&English'), self)
-        self.__vietnamese_action = QAction(self.tr('&Vietnamese'), self)
-        self.__vietnamese_action.setData('vi_VN')
+        self.__english_action = QAction(self.tr("&English"), self)
+        self.__vietnamese_action = QAction(self.tr("&Vietnamese"), self)
+        self.__vietnamese_action.setData("vi_VN")
 
-        option_menu = self.addMenu(self.tr('&Option'))
+        option_menu = self.addMenu(self.tr("&Option"))
         option_menu.addAction(self.__change_color_action)
 
-        change_language_menu = option_menu.addMenu(self.tr('Change &language'))
+        change_language_menu = option_menu.addMenu(self.tr("Change &language"))
         change_language_menu.addAction(self.__english_action)
         change_language_menu.addAction(self.__vietnamese_action)
 
         # Help menu
-        help_action = QAction(self.tr('&Help...'), self)
-        about_action = QAction(self.tr('&About Ice Path Finder'), self)
+        help_action = QAction(self.tr("&Help..."), self)
+        about_action = QAction(self.tr("&About Ice Path Finder"), self)
 
-        help_action.setShortcut('F1')
+        help_action.setShortcut("F1")
 
         help_action.triggered.connect(self.showHelp)
         about_action.triggered.connect(self.showAbout)
 
-        help_menu = self.addMenu(self.tr('&Help'))
+        help_menu = self.addMenu(self.tr("&Help"))
         help_menu.addAction(help_action)
         help_menu.addSeparator()
         help_menu.addAction(about_action)
 
     def showHelp(self):
-        print('help clicked')
+        print("help clicked")
 
     def showAbout(self):
         QMessageBox.information(
-            self, self.tr('About - Ice Path Finder'),
-            self.tr('College Project - Basic Topics:\n'
-                    'Apply blind search algorithms in solving ice maze\n'
-                    'Develop by Nguyen Khanh Dung\n'
-                    'Version: 1.0'))
+            self, self.tr("About - Ice Path Finder"),
+            self.tr("College Project - Basic Topics:\n"
+                    "Apply blind search algorithms in solving ice maze\n"
+                    "Develop by Nguyen Khanh Dung\n"
+                    "Version: 1.1"))
 
     def setNewAction(self, function):
         self.__new_action.triggered.connect(function)
 
     def setLoadAction(self, function):
         self.__load_action.triggered.connect(function)
+
+    def setSaveAction(self, function):
+        self.__save_action.triggered.connect(function)
 
     def setChangeCorlorAction(self, function):
         self.__change_color_action.triggered.connect(function)
@@ -200,7 +209,7 @@ class MyAppView(QWidget):
         super(MyAppView, self).__init__()
 
         self.__view = QGraphicsView()
-        self.__tileset = QPixmap('../imgs/tiles.png')
+        self.__tileset = QPixmap(path.dirname(__file__) + "/../imgs/tiles.png")
         self.__load_button = QPushButton()
         self.__solve_button = QPushButton()
         self.__solve_button.setEnabled(False)
@@ -227,17 +236,17 @@ class MyAppView(QWidget):
         self.__solve_button.clicked.connect(function)
 
     def setButtonsText(self):
-        self.__load_button.setText(self.tr('Import maze from file'))
-        self.__solve_button.setText(self.tr('Solve'))
+        self.__load_button.setText(self.tr("Import maze from file"))
+        self.__solve_button.setText(self.tr("Solve"))
 
     def getTileNum(self, tile):
-        if tile == ' ':
+        if tile == " ":
             return 0
-        if tile == '#':
+        if tile == "#":
             return 1
-        if tile == 'S':
+        if tile == "S":
             return 2
-        if tile == 'E':
+        if tile == "E":
             return 3
         else:
             return 4
@@ -260,8 +269,8 @@ class MyAppView(QWidget):
         scene = self.__view.scene()
         if len(result) == 0:
             QMessageBox.information(
-                self, self.tr('Notification'),
-                self.tr('There is no solution for this maze.'))
+                self, self.tr("Notification"),
+                self.tr("There is no solution for this maze."))
             return
         for line in self.__path:
             scene.removeItem(line)
