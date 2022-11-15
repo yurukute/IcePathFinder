@@ -6,13 +6,19 @@ Ice Path Finder is a python project apply blind search algorithms to solve Ice M
 
 ### Purpose
 Practice on Object-oriented programming.
+
 Learn how to use Qt framework with PyQt.
+
 Revise searching algorithms, data structures and graph theory.
 
 ## Features
 Generate random maze.
+
 Load maze text file from system.
+
 Solve the maze using BFS and DFS algorithms.
+
 Allow user to change ice path's color.
+
 Support 2 different languages: English and Vietnamese.
 
