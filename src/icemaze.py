@@ -34,9 +34,9 @@ class IceMaze:
         i, j = 0, 0
         for c in strmap:
             if c == 'S':
-                maze.__start = i * row + j
+                maze.__start = i * col + j
             if c == 'E':
-                maze.__end = i * row + j
+                maze.__end = i * col + j
             if c != '\n':
                 maze.__map[i][j] = c
                 j += 1
@@ -65,6 +65,14 @@ class IceMaze:
             curr = next
         return next
 
+    def get_nexts(self, curr):
+        nexts = []
+        for DIR in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
+            next = self.next_tile(curr, DIR)
+            if next != curr:
+                nexts.append(next)
+        return nexts
+
     def update_result(self, result, parent, curr):
         new_path = []
         while parent[curr] != -1:
@@ -88,9 +96,8 @@ class IceMaze:
                 result = self.update_result(result, parent, curr)
                 continue
             mark[curr] = 1
-            for DIR in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
-                next = self.next_tile(curr, DIR)
-                if (next != curr and next != parent[curr] and not mark[next]
+            for next in self.get_nexts(curr):
+                if (next != parent[curr] and not mark[next]
                         and parent[next] == -1):
                     parent[next] = curr
                     Queue.put(next)
@@ -98,30 +105,42 @@ class IceMaze:
 
     def dfs(self):
         result = []
-        mark = [0] * self.__row * (self.__col + 1)
         parent = [-1] * self.__row * (self.__col + 1)
+
         Stack = queue.LifoQueue()
-        Stack.put(self.__start)
-        col = self.__col
+        Stack.put((self.__start, 1))
         while not Stack.empty():
-            curr = Stack.get()
-            if (self.__map[curr // col][curr % col] == 'E'):
+            curr, depth = Stack.get()
+            if curr == self.__end:
                 result = self.update_result(result, parent, curr)
                 continue
-            mark[curr] = 1
-            for DIR in reversed(['UP', 'DOWN', 'LEFT', 'RIGHT']):
-                next = self.next_tile(curr, DIR)
-                if (next != curr and next != parent[curr] and not mark[next]
-                        and parent[next] == -1):
+            for next in reversed(self.get_nexts(curr)):
+                if parent[next] == -1 and next != self.__start:
                     parent[next] = curr
-                    Stack.put(next)
-        return result
+                    Stack.put((next, depth + 1))
+                else:
+                    sz_next, sz_parr, tmp = 0, 0, next
+                    parent_curr_in_path = False
+                    while tmp != -1:
+                        if tmp == parent[curr]:
+                            parent_curr_in_path = True
+                        sz_next += 1
+                        if parent_curr_in_path:
+                            sz_parr += 1
+                        tmp = parent[tmp]
 
-    def print(self):
-        for i in range(self.__row):
-            for j in range(self.__col):
-                print(self.__map[i][j], end='')
-            print()
+                    if (sz_next + 1 <
+                        (sz_parr + 1 if parent_curr_in_path else depth)
+                            and curr in self.get_nexts(next)
+                            and curr != self.__start):
+                        parent[curr] = next
+                        Stack.put((curr, sz_next))
+                    elif sz_next > depth + 1:
+                        parent[next] = curr
+                        Stack.put((next, depth + 1))
+
+        result = self.update_result(result, parent, self.__end)
+        return result
 
     def get_map(self):
         return self.__map
