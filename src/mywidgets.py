@@ -162,8 +162,10 @@ class PickColorDialog(MyDialog):
         self.__bfs_button = QPushButton()
         self.__dfs_button = QPushButton()
 
-        self.__bfs_button.setPalette(self.__bfs_color)
-        self.__dfs_button.setPalette(self.__dfs_color)
+        self.__bfs_button.setStyleSheet("background-color: " +
+                                        self.__bfs_color.name())
+        self.__dfs_button.setStyleSheet("background-color: " +
+                                        self.__dfs_color.name())
 
         self.__bfs_button.clicked.connect(self.bfsButtonClicked)
         self.__dfs_button.clicked.connect(self.dfsButtonClicked)
@@ -178,13 +180,15 @@ class PickColorDialog(MyDialog):
         color = QColorDialog.getColor()
         if color.isValid():
             self.__bfs_color = color
-            self.__bfs_button.setPalette(color)
+            self.__bfs_button.setStyleSheet("background-color: " +
+                                            color.name())
 
     def dfsButtonClicked(self):
         color = QColorDialog.getColor()
         if color.isValid():
             self.__dfs_color = color
-            self.__dfs_button.setPalette(color)
+            self.__dfs_button.setStyleSheet("background-color: " +
+                                            color.name())
 
     def values(self):
         return [self.__bfs_color, self.__dfs_color]
@@ -250,7 +254,6 @@ class MyAppView(QWidget):
                 pixmap.setPos(j * 32, i * 32)
         self.__solve_button.setEnabled(True)
         self.__path = []
-        print(scene.width(), scene.height())
 
     def drawSolution(self, maze, result, color):
         print(result)
