@@ -71,7 +71,8 @@ class MyMenuBar(QMenuBar):
         dialog = QDialog()
         view = QWebEngineView()
         view.load(
-            QUrl("qrc:" + path.dirname(__file__) + "/../UserManual.en.html"))
+            QUrl.fromLocalFile(
+                path.dirname(__file__) + "/../UserManual.en.html"))
 
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(view)
