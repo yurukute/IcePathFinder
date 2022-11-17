@@ -1,12 +1,14 @@
 from os import path
 from itertools import pairwise
 from PySide6.QtGui import QAction, QPen, QPixmap
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QUrl
 from PySide6.QtWidgets import (QApplication, QColorDialog, QDialog,
                                QDialogButtonBox, QFormLayout, QGraphicsScene,
                                QGraphicsView, QGroupBox, QHBoxLayout, QLabel,
                                QMenuBar, QMessageBox, QPushButton, QSizePolicy,
                                QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
+
+from PySide6.QtWebEngineWidgets import QWebEngineView
 
 
 class MyMenuBar(QMenuBar):
@@ -66,6 +68,18 @@ class MyMenuBar(QMenuBar):
         help_menu.addAction(about_action)
 
     def showHelp(self):
+        dialog = QDialog()
+        view = QWebEngineView()
+        view.load(
+            QUrl("qrc:" + path.dirname(__file__) + "/../UserManual.en.html"))
+
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(view)
+
+        dialog.setLayout(mainLayout)
+
+        dialog.exec()
+
         print("help clicked")
 
     def showAbout(self):
@@ -108,10 +122,10 @@ class MyDialog(QDialog):
         self.setLayout(mainLayout)
 
     def createForm(self):
-        return
+        return QGroupBox()
 
     def values(self):
-        return
+        return []
 
 
 class NewMazeDialog(MyDialog):
