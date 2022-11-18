@@ -1,4 +1,5 @@
 import time
+from os import path
 from PySide6.QtCore import QSize, QTranslator, QEvent
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (QApplication, QFileDialog, QInputDialog, QLabel,
@@ -106,7 +107,8 @@ class MainWindow(QMainWindow):
     def changeLanguage(self):
         lang = self.sender().data()
         if lang:
-            self.__translator.load(f'../translate/{lang}')
+            self.__translator.load(
+                path.dirname(__file__) + f'/translate/{lang}')
             QApplication.instance().installTranslator(self.__translator)
         else:
             QApplication.instance().removeTranslator(self.__translator)
