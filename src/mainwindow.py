@@ -15,10 +15,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Ice Path Finder')
         self.setFixedSize(QSize(800, 600))
-        self.setMenuBar(self.getMenuBar())
+
+        self.__menu = self.getMenuBar('en')
 
         self.__appview = MyAppView()
-
         self.__appview.setSolveButton(self.solveMaze)
         self.__appview.setLoadButton(self.loadMaze)
 
@@ -31,8 +31,8 @@ class MainWindow(QMainWindow):
         self.__msg = QLabel(self.tr('Welcome to Ice Path Finder'))
         self.statusBar().addPermanentWidget(self.__msg)
 
-    def getMenuBar(self):
-        menu = MyMenuBar()
+    def getMenuBar(self, lang):
+        menu = MyMenuBar(lang)
 
         menu.setNewAction(self.initMaze)
         menu.setLoadAction(self.loadMaze)
@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         menu.setChangeCorlorAction(self.changeColor)
         menu.setChangeLanguageAction(self.changeLanguage)
 
+        self.setMenuBar(menu)
         return menu
 
     def initMaze(self):
@@ -108,7 +109,7 @@ class MainWindow(QMainWindow):
         lang = self.sender().data()
         if lang:
             self.__translator.load(
-                path.dirname(__file__) + f'/translate/{lang}')
+                path.dirname(__file__) + f'/../translate/{lang}')
             QApplication.instance().installTranslator(self.__translator)
         else:
             QApplication.instance().removeTranslator(self.__translator)
@@ -119,7 +120,8 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).changeEvent(event)
 
     def retranslateUi(self):
-        self.setMenuBar(self.getMenuBar())
+        lang = self.__translator.language()
+        self.__menu = self.getMenuBar(lang[0:2])
         self.__appview.setButtonsText()
         self.__msg.setText(self.tr('Welcome to Ice Path Finder'))
 
