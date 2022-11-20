@@ -119,18 +119,18 @@ class IceMaze:
                     parent[next] = curr
                     Stack.put((next, depth + 1))
                 else:
-                    sz_next, sz_parr, tmp = 0, 0, next
+                    sz_next, sz_pcurr, tmp = 0, 0, next
                     parent_curr_in_path = False
                     while tmp != -1:
                         if tmp == parent[curr]:
                             parent_curr_in_path = True
                         sz_next += 1
                         if parent_curr_in_path:
-                            sz_parr += 1
+                            sz_pcurr += 1
                         tmp = parent[tmp]
 
                     if (sz_next + 1 <
-                        (sz_parr + 1 if parent_curr_in_path else depth)
+                        (sz_pcurr + 1 if parent_curr_in_path else depth)
                             and curr in self.get_nexts(next)
                             and curr != self.__start):
                         parent[curr] = next
