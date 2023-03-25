@@ -17,3 +17,6 @@ Ice Path Finder is a python project apply blind search algorithms to solve Ice M
 - Save maze to text file.
 - Support 2 different languages: English and Vietnamese.
 
+## DEMO
+![](./imgs/demo_simplemap.png)
+![](./imgs/demo_simplemap._solved.png)
