@@ -19,4 +19,4 @@ Ice Path Finder is a python project apply blind search algorithms to solve Ice M
 
 ## DEMO
 ![](./imgs/demo_simplemap.png)
-![](./imgs/demo_simplemap._solved.png)
+![](./imgs/demo_simplemap_solved.png)
