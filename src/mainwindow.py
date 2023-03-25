@@ -59,6 +59,7 @@ class MainWindow(QMainWindow):
                 self.__maze = IceMaze.read_maze(f.read())
                 self.__appview.drawMaze(self.__maze.get_map())
                 self.enableSave()
+                self.__msg.setText("")
             except (ValueError, IndexError):
                 QMessageBox.critical(
                     self, self.tr('Error'),
